@@ -1,0 +1,38 @@
+{
+    "id": "43f5d256-b75d-559b-982e-532d707a7f40",
+    "type": "csp-rule-template",
+    "attributes": {
+        "metadata": {
+            "impact": "To use Access Approval your organization will need have enabled Access Transparency and have at one of the following support level: Enhanced or Premium. There will be subscription costs associated with these support levels, as well as increased storage costs for storing the logs. You will also not be able to turn the Access Transparency which Access Approval depends on, off yourself. To do so you will need to submit a service request to Google Cloud Support. There will also be additional overhead in managing user permissions. There may also be a potential delay in support times as Google Personnel will have to wait for their access to be approved.",
+            "default_value": "",
+            "references": "1. https://cloud.google.com/cloud-provider-access-management/access-approval/docs\n2. https://cloud.google.com/cloud-provider-access-management/access-approval/docs/overview\n3. https://cloud.google.com/cloud-provider-access-management/access-approval/docs/quickstart-custom-key\n4. https://cloud.google.com/cloud-provider-access-management/access-approval/docs/supported-services\n5. https://cloud.google.com/cloud-provider-access-management/access-approval/docs/view-historical-requests",
+            "id": "43f5d256-b75d-559b-982e-532d707a7f40",
+            "name": "Ensure 'Access Approval' is 'Enabled'",
+            "profile_applicability": "* Level 2",
+            "description": "GCP Access Approval enables you to require your organizations' explicit approval whenever Google support try to access your projects.\nYou can then select users within your organization who can approve these requests through giving them a security role in IAM.\nAll access requests display which Google Employee requested them in an email or Pub/Sub message that you can choose to Approve.\nThis adds an additional control and logging of who in your organization approved/denied these requests.",
+            "rationale": "Controlling access to your information is one of the foundations of information security.\nGoogle Employees do have access to your organizations' projects for support reasons.\nWith Access Approval, organizations can then be certain that their information is accessed by only approved Google Personnel.",
+            "audit": "**From Google Cloud Console**\n\n**Determine if Access Transparency is Enabled as it is a Dependency**\n\n1. From the Google Cloud Home inside the project you wish to audit, click on the Navigation hamburger menu in the top left. Hover over the `IAM & Admin` Menu. Select `settings` in the middle of the column that opens.\n\n2. The status should be \"Enabled' under the heading `Access Transparency`\n\n**Determine if Access Approval is Enabled**\n\n3. From the Google Cloud Home, within the project you wish to check, click on the Navigation hamburger menu in the top left. Hover over the `Security` Menu. Select `Access Approval` in the middle of the column that opens. \n\n4. The status will be displayed here. If you see a screen saying you need to enroll in Access Approval, it is not enabled.\n\n**From Google Cloud CLI**\n\n**Determine if Access Approval is Enabled**\n5. From within the project you wish to audit, run the following command.\n```\ngcloud access-approval settings get\n```\n6. The status will be displayed in the output.\n\nIF Access Approval is not enabled you should get this output:\n```\nAPI [accessapproval.googleapis.com] not enabled on project [-----].\nWould you like to enable and retry (this will take a few minutes)? (y/N)?\n```\nAfter entering `Y` if you get the following output, it means that `Access Transparency` is not enabled:\n```\nERROR: (gcloud.access-approval.settings.get) FAILED_PRECONDITION: Precondition check failed.\n```",
+            "remediation": "**From Google Cloud Console**\n\n1. From the Google Cloud Home, within the project you wish to enable, click on the Navigation hamburger menu in the top left. Hover over the `Security` Menu. Select `Access Approval` in the middle of the column that opens. \n\n2. The status will be displayed here. On this screen, there is an option to click `Enroll`. If it is greyed out and you see an error bar at the top of the screen that says `Access Transparency is not enabled` please view the corresponding reference within this section to enable it.\n\n3. In the second screen click `Enroll`.\n\n**Grant an IAM Group or User the role with permissions to Add Users to be Access Approval message Recipients**\n\n4. From the Google Cloud Home, within the project you wish to enable, click on the Navigation hamburger menu in the top left. Hover over the `IAM and Admin`. Select `IAM` in the middle of the column that opens. \n\n5. Click the blue button the says `+ ADD` at the top of the screen.\n\n6. In the `principals` field, select a user or group by typing in their associated email address.\n\n7. Click on the role field to expand it. In the filter field enter `Access Approval Approver` and select it.\n\n8. Click `save`.\n\n**Add a Group or User as an Approver for Access Approval Requests**\n\n9. As a user with the `Access Approval Approver` permission, within the project where you wish to add an email address to which request will be sent, click on the Navigation hamburger menu in the top left. Hover over the `Security` Menu. Select `Access Approval` in the middle of the column that opens. \n\n10. Click `Manage Settings`\n\n11. Under `Set up approval notifications`, enter the email address associated with a Google Cloud User or Group you wish to send Access Approval requests to. All future access approvals will be sent as emails to this address.\n\n**From Google Cloud CLI**\n\n12. To update all services in an entire project, run the following command from an account that has permissions as an 'Approver for Access Approval Requests'\n\n```\ngcloud access-approval settings update --project=<project name> --enrolled_services=all --notification_emails='<email recipient for access approval requests>@<domain name>'\n```",
+            "section": "Logging and Monitoring",
+            "version": "1.0",
+            "tags": [
+                "CIS",
+                "GCP",
+                "CIS 2.15",
+                "Logging and Monitoring"
+            ],
+            "benchmark": {
+                "name": "CIS Google Cloud Platform Foundation",
+                "version": "v2.0.0",
+                "id": "cis_gcp",
+                "rule_number": "2.15",
+                "posture_type": "cspm"
+            },
+            "rego_rule_id": "cis_2_15"
+        }
+    },
+    "migrationVersion": {
+        "csp-rule-template": "8.7.0"
+    },
+    "coreMigrationVersion": "8.7.0"
+}
